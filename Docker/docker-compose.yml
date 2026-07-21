@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # Base de datos Relacional
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Base de datos No Relacional
+  mongo-db:
+    image: mongo:7.0
+    container_name: mongo_db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secretpassword
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  # Backend (Spring Boot)
+  backend:
+    build:
+      context: ../Backend            # Sube un nivel a la carpeta Backend
+      dockerfile: ../Docker/backend.Dockerfile
+    container_name: spring_backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/app_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: secretpassword
+      SPRING_DATA_MONGODB_URI: mongodb://admin:secretpassword@mongo-db:27017/app_nosql?authSource=admin
+    depends_on:
+      - postgres-db
+      - mongo-db
+
+  # Frontend (Angular + Nginx)
+  frontend:
+    build:
+      context: ../Frontend           # Sube un nivel a la carpeta Frontend
+      dockerfile: ../Docker/frontend.Dockerfile
+    container_name: angular_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  mongo_data:
