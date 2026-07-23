@@ -49,14 +49,22 @@ Los contenedores están configurados para operar bajo una red virtual privada ge
 * El **Frontend** (que se ejecuta en el navegador del usuario) interactúa con la API del Backend a través de la ruta expuesta `http://localhost:8080`.
 
 ## Comandos 
-En la carpeta de **Docker**
+En la carpeta de **Docker** para compilar el proyecto
 
 `docker compose up -d --build` 
+
+Comando para levantar sin compilar 
+
+`docker compose up -d`
 
 Comando para ver estado
 
 `docker compose ps`
 
-Comando para detener
+Comando para detener / encender 
 
-`docker compose stop`
+`docker compose stop / start`
+
+Ver servicios en tiempo real 
+
+`docker compose logs -f / <servicio>`
