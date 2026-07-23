@@ -32,7 +32,7 @@ services:
   backend:
     build:
       context: ../Backend            # Sube un nivel a la carpeta Backend
-      dockerfile: ../Docker/backend.Dockerfile
+      dockerfile: ../Docker/backend.dockerfile
     container_name: spring_backend
     restart: always
     ports:
@@ -50,7 +50,7 @@ services:
   frontend:
     build:
       context: ../Frontend           # Sube un nivel a la carpeta Frontend
-      dockerfile: ../Docker/frontend.Dockerfile
+      dockerfile: ../Docker/frontend.dockerfile
     container_name: angular_frontend
     restart: always
     ports:
