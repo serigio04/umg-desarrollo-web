@@ -68,3 +68,7 @@ Comando para detener / encender
 Ver servicios en tiempo real 
 
 `docker compose logs -f / <servicio>`
+
+## Conexion a la base de datos desde el contenedor 
+Entrar al contenedor de docker
+`docker exec -it postgres_db psql -U admin -d clinica_db`
