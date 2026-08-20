@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -24,12 +25,17 @@ public class JwtTokenProvider {
     private long jwtExpirationMs;
 
     private PrivateKey getPrivateKey() throws Exception {
-        String key = new String(Files.readAllBytes(privateKeyResource.getFile().toPath()))
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace("-----END PRIVATE KEY-----", "")
-                .replace("-----BEGIN RSA PRIVATE KEY-----", "")
-                .replace("-----END RSA PRIVATE KEY-----", "")
-                .replaceAll("\\s+", "");
+        String key;
+        // Lectura segura mediante InputStream compatible con JAR de Docker
+        try (InputStream inputStream = privateKeyResource.getInputStream()) {
+            key = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+
+        key = key.replace("-----BEGIN PRIVATE KEY-----", "")
+                 .replace("-----END PRIVATE KEY-----", "")
+                 .replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                 .replace("-----END RSA PRIVATE KEY-----", "")
+                 .replaceAll("\\s+", "");
 
         byte[] keyBytes = Base64.getDecoder().decode(key);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
