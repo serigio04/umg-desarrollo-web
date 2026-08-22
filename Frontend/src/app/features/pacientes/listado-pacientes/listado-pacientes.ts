@@ -11,7 +11,7 @@ import { PacientesService } from '../services/pacientes';
       <h2>Listado de Pacientes</h2>
       <ul style="list-style-type: none; padding: 0;">
         <li *ngFor="let p of pacientes" style="padding: 10px; border-bottom: 1px solid #ccc;">
-          <strong>{{ p.nombre }} {{ p.apellido }}</strong> - ID: {{ p.id }}
+          <strong>{{ p.nombre }} {{ p.apellidos }}</strong> - ID: {{ p.id }}
         </li>
       </ul>
     </div>
