@@ -1,7 +1,16 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login';
+import { ListadoPacientesComponent } from './features/pacientes/listado-pacientes/listado-pacientes';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { 
+    path: 'login', 
+    component: LoginComponent },
+  { 
+    path: 'pacientes', 
+    component: ListadoPacientesComponent, 
+    canActivate: [authGuard] 
+  },
   { path: '', redirectTo: 'login', pathMatch: 'full' } // Redirige por defecto al login
 ];
