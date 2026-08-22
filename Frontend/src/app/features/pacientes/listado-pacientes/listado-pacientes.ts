@@ -1,5 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PacientesService } from '../services/pacientes';
 
 @Component({
@@ -19,12 +19,16 @@ import { PacientesService } from '../services/pacientes';
 })
 export class ListadoPacientesComponent implements OnInit {
   private pacientesService = inject(PacientesService);
+  private platformId = inject(PLATFORM_ID); 
+  
   pacientes: any[] = [];
 
   ngOnInit() {
-    this.pacientesService.obtenerPacientes().subscribe({
-      next: (data) => this.pacientes = data,
-      error: (err) => console.error('Error cargando pacientes:', err)
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.pacientesService.obtenerPacientes().subscribe({
+        next: (data) => this.pacientes = data,
+        error: (err) => console.error('Error cargando pacientes:', err)
+      });
+    }
   }
 }
