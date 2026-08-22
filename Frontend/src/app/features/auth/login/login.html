@@ -1,0 +1,22 @@
+<div style="max-width: 400px; margin: 50px auto; font-family: sans-serif;">
+  <h2>Iniciar Sesión</h2>
+  
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div style="margin-bottom: 15px;">
+      <label>Usuario:</label>
+      <input type="text" formControlName="username" style="width: 100%; padding: 8px;" />
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+      <label>Contraseña:</label>
+      <input type="password" formControlName="password" style="width: 100%; padding: 8px;" />
+    </div>
+
+    <!-- Mensaje de error si falla el login -->
+    <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+    
+    <button type="submit" [disabled]="loginForm.invalid" style="width: 100%; padding: 10px; background: blue; color: white;">
+      Ingresar
+    </button>
+  </form>
+</div>
