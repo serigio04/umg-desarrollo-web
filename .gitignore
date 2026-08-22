@@ -6,3 +6,4 @@ proyecto-enrutador/
 apirest-demo/
 target/
 keys/
+*.env
