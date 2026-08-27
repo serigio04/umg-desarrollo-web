@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Administración de Usuarios</h2>
+      <p>Gestión de cuentas, roles y permisos del sistema</p>
+    </div>
+    <button class="btn-primary">+ Nuevo Usuario</button>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of usuarios">
+          <td>#{{ u.id }}</td>
+          <td class="user-name">{{ u.username }}</td>
+          <td>
+            <span class="badge" [ngClass]="u.rol.toLowerCase()">{{ u.rol }}</span>
+          </td>
+          <td>
+            <span class="status-dot"></span> Activo
+          </td>
+          <td>
+            <button class="btn-action edit">Editar</button>
+            <button class="btn-action delete">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
