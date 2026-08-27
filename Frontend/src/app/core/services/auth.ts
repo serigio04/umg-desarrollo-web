@@ -14,6 +14,11 @@ export class AuthService {
   // 2. Asigna la URL desde la variable de entorno
   private apiUrl = environment.API_AUTH_URL; 
 
+  tieneRol(rolesPermitidos: string[]): boolean {
+    const rolesUsuario = this.obtenerRoles();
+    return rolesPermitidos.some(rol => rolesUsuario.includes(rol));
+  }
+
   login(credentials: { username: string; password: string }) {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
