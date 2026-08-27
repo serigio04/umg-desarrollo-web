@@ -1,1 +1,10 @@
-<p>navbar works!</p>
+<nav class="navbar">
+    <div class="brand">
+        Sistema Médico
+    </div>
+    <div class="nav-links">
+        <a routerLink="/pacientes" routerLinkActive="active">Pacientes</a>
+        <a *ngIf="esAdmin()" routerLink="/administracion/usuarios" routerLinkActive="active">Gestión de Usuarios</a>
+    </div>
+    <button class="btn-logout" (click)="cerrarSesion()">Cerrar Sesión</button>
+</nav>
