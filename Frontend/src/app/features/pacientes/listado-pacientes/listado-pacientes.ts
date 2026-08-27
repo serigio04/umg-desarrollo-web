@@ -6,16 +6,7 @@ import { PacientesService } from '../services/pacientes';
   selector: 'app-listado-pacientes',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div style="padding: 20px; font-family: sans-serif;">
-      <h2>Listado de Pacientes</h2>
-      <ul style="list-style-type: none; padding: 0;">
-        <li *ngFor="let p of pacientes" style="padding: 10px; border-bottom: 1px solid #ccc;">
-          <strong>{{ p.nombre }} {{ p.apellidos }}</strong> - ID: {{ p.id }}
-        </li>
-      </ul>
-    </div>
-  `
+  template: './listado-pacientes.html',
 })
 export class ListadoPacientesComponent implements OnInit {
   private pacientesService = inject(PacientesService);

@@ -12,13 +12,13 @@ export const routes: Routes = [
     path: 'pacientes', 
     component: ListadoPacientesComponent, 
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['ADMIN', 'OPERADOR'] } 
+    data: { roles: ['ROLE_ADMIN', 'ROLE_OPERADOR'] } 
   },
   {
     path: 'administracion/usuarios',
     component: ListadoPacientesComponent, 
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['ADMIN'] }
+    data: { roles: ['ROLE_ADMIN'] }
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' } // Redirige por defecto al login
 ];

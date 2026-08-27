@@ -16,8 +16,13 @@ export class AuthService {
 
   tieneRol(rolesPermitidos: string[]): boolean {
     const rolesUsuario = this.obtenerRoles();
+
+    if (rolesUsuario.includes('ADMIN')) {
+      return true;
+    }
+
     return rolesPermitidos.some(rol => rolesUsuario.includes(rol));
-  }
+  } 
 
   login(credentials: { username: string; password: string }) {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
@@ -35,12 +40,13 @@ export class AuthService {
       if (token) {
         try {
           const decoded: any = jwtDecode(token);
-          return decoded.roles || [];
+          const roles: string[] = decoded.roles || [];
+          return roles.map(r => r.replace('ROLE_', ''));
         } catch (e) {
           return [];
         }
       }
     }
     return [];
-  }
+  } 
 }

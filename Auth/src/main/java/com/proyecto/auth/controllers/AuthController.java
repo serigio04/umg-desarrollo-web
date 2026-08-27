@@ -36,17 +36,26 @@ public class AuthController {
         usuario.setEmail(request.getEmail());
         usuario.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        Rol rolUser = rolRepository.findByNombre("ROLE_USER")
+        String nombreRol = (request.getRol() != null && !request.getRol().isBlank()) 
+                ? request.getRol().toUpperCase() 
+                : "ROLE_USER";
+
+        if (!nombreRol.startsWith("ROLE_")) {
+            nombreRol = "ROLE_" + nombreRol;
+        }
+
+        final String rolFinal = nombreRol;
+        Rol rolAsignado = rolRepository.findByNombre(rolFinal)
                 .orElseGet(() -> {
                     Rol nuevo = new Rol();
-                    nuevo.setNombre("ROLE_USER");
+                    nuevo.setNombre(rolFinal);
                     return rolRepository.save(nuevo);
                 });
 
-        usuario.setRoles(Collections.singleton(rolUser));
+        usuario.setRoles(Collections.singleton(rolAsignado));
         usuarioRepository.save(usuario);
 
-        return ResponseEntity.ok("Usuario registrado exitosamente.");
+        return ResponseEntity.ok("Usuario registrado exitosamente con el rol: " + rolFinal);
     }
 
     @PostMapping("/login")
@@ -71,6 +80,17 @@ public class AuthController {
     }
 }
 
-// DTOs auxiliares en el mismo archivo
-@Data class RegistroRequest { private String username; private String email; private String password; }
-@Data class LoginRequest { private String username; private String password; }
+// DTOs auxiliares
+@Data 
+class RegistroRequest { 
+    private String username; 
+    private String email; 
+    private String password; 
+    private String rol;
+}
+
+@Data 
+class LoginRequest { 
+    private String username; 
+    private String password; 
+}
