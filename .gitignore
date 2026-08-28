@@ -7,3 +7,4 @@ apirest-demo/
 target/
 keys/
 *.env
+Frontend/src/environments/environment.ts
