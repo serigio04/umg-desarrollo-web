@@ -6,7 +6,7 @@ import { PacientesService } from '../services/pacientes';
   selector: 'app-listado-pacientes',
   standalone: true,
   imports: [CommonModule],
-  template: './listado-pacientes.html',
+  templateUrl: './listado-pacientes.html',
 })
 export class ListadoPacientesComponent implements OnInit {
   private pacientesService = inject(PacientesService);
