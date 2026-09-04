@@ -1,8 +1,86 @@
-<div style="padding: 20px; font-family: sans-serif;">
+<div class="container">
+  <div class="header">
     <h2>Listado de Pacientes</h2>
-    <ul style="list-style-type: none; padding: 0;">
-    <li *ngFor="let p of pacientes" style="padding: 10px; border-bottom: 1px solid #ccc;">
-        <strong>{{ p.nombre }} {{ p.apellidos }}</strong> - ID: {{ p.id }}
-    </li>
-    </ul>
+    <span class="badge-total">Total Encontrados: {{ metadata.totalRecords }}</span>
+  </div>
+
+  <!-- Barra de Filtros -->
+  <div class="filter-card">
+    <div class="filter-group">
+      <input type="text" [(ngModel)]="filtros.nombre" (keyup.enter)="aplicarFiltros()" placeholder="Nombre" />
+      <input type="text" [(ngModel)]="filtros.apellido" (keyup.enter)="aplicarFiltros()" placeholder="Apellido" />
+      <input type="text" [(ngModel)]="filtros.dpi" (keyup.enter)="aplicarFiltros()" placeholder="DPI" />
+      
+      <select [(ngModel)]="filtros.estado" (change)="aplicarFiltros()">
+        <option [ngValue]="null">-- Todos los Estados --</option>
+        <option [ngValue]="true">Activo</option>
+        <option [ngValue]="false">Inactivo</option>
+      </select>
+
+      <button class="btn-search" (click)="aplicarFiltros()">Buscar</button>
+      <button class="btn-reset" (click)="limpiarFiltros()">Limpiar</button>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="loading-state">Cargando pacientes...</div>
+  <div *ngIf="errorMsg" class="error-alert">{{ errorMsg }}</div>
+
+  <!-- Tabla -->
+  <div *ngIf="!cargando && pacientes.length > 0" class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>DPI</th>
+          <th>Email</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of pacientes">
+          <td>#{{ p.id }}</td>
+          <td class="patient-name">{{ p.nombre }}</td>
+          <td>{{ p.apellido }}</td>
+          <td>{{ p.dpi || 'N/A' }}</td>
+          <td class="patient-email">{{ p.email || 'N/A' }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="p.estado !== false ? 'active' : 'inactive'">
+              {{ p.estado !== false ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Paginador -->
+    <div class="pagination-bar">
+      <div class="page-size-selector">
+        <label>Mostrar: </label>
+        <select [(ngModel)]="filtros.size" (change)="cambiarTamanoPagina()">
+          <option [ngValue]="50">50</option>
+          <option [ngValue]="100">100</option>
+          <option [ngValue]="200">200</option>
+        </select>
+        <span>registros por página</span>
+      </div>
+
+      <div class="pagination-controls">
+        <button [disabled]="!metadata.hasPreviousPage" (click)="cambiarPagina(metadata.page - 1)">
+          &laquo; Anterior
+        </button>
+        
+        <span>Página {{ metadata.page + 1 }} de {{ metadata.totalPages }}</span>
+        
+        <button [disabled]="!metadata.hasNextPage" (click)="cambiarPagina(metadata.page + 1)">
+          Siguiente &raquo;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && pacientes.length === 0 && !errorMsg" class="empty-state">
+    No se encontraron pacientes con los criterios especificados.
+  </div>
 </div>
