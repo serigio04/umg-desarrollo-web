@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 //todo quitar data mock
 export class UsuariosComponent {
   usuarios = [
-    { id: 1, username: 'prueba_doctor', rol: 'ADMIN' },
-    { id: 2, username: 'operador_citas', rol: 'OPERADOR' }
+    { id: 1, username: 'prueba_doctor', rol: 'ROLE_ADMIN' },
+    { id: 2, username: 'operador_citas', rol: 'ROLE_OPERADOR' }
   ];
 }
