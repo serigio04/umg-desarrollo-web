@@ -8,8 +8,7 @@
   <div class="filter-card">
     <div class="filter-group">
       <input type="text" [(ngModel)]="filtros.nombre" (keyup.enter)="aplicarFiltros()" placeholder="Nombre" />
-      <input type="text" [(ngModel)]="filtros.apellido" (keyup.enter)="aplicarFiltros()" placeholder="Apellido" />
-      <input type="text" [(ngModel)]="filtros.dpi" (keyup.enter)="aplicarFiltros()" placeholder="DPI" />
+      <input type="text" [(ngModel)]="filtros.apellidos" (keyup.enter)="aplicarFiltros()" placeholder="Apellidos" />
       
       <select [(ngModel)]="filtros.estado" (change)="aplicarFiltros()">
         <option [ngValue]="null">-- Todos los Estados --</option>
@@ -33,7 +32,6 @@
           <th>ID</th>
           <th>Nombre</th>
           <th>Apellido</th>
-          <th>DPI</th>
           <th>Email</th>
           <th>Estado</th>
         </tr>
@@ -42,8 +40,7 @@
         <tr *ngFor="let p of pacientes">
           <td>#{{ p.id }}</td>
           <td class="patient-name">{{ p.nombre }}</td>
-          <td>{{ p.apellido }}</td>
-          <td>{{ p.dpi || 'N/A' }}</td>
+          <td>{{ p.apellidos }}</td>
           <td class="patient-email">{{ p.email || 'N/A' }}</td>
           <td>
             <span class="status-badge" [ngClass]="p.estado !== false ? 'active' : 'inactive'">

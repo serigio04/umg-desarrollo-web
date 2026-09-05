@@ -17,12 +17,12 @@ public class PacienteSpecification {
             if (filter.getNombre() != null && !filter.getNombre().isBlank()) {
                 predicates.add(cb.like(cb.lower(root.get("nombre")), "%" + filter.getNombre().toLowerCase().trim() + "%"));
             }
-            if (filter.getApellido() != null && !filter.getApellido().isBlank()) {
-                predicates.add(cb.like(cb.lower(root.get("apellido")), "%" + filter.getApellido().toLowerCase().trim() + "%"));
+            if (filter.getApellidos() != null && !filter.getApellidos().isBlank()) {
+                predicates.add(cb.like(cb.lower(root.get("apellidos")), "%" + filter.getApellidos().toLowerCase().trim() + "%"));
             }
-            if (filter.getDpi() != null && !filter.getDpi().isBlank()) {
-                predicates.add(cb.equal(root.get("dpi"), filter.getDpi().trim()));
-            }
+            // if (filter.getDpi() != null && !filter.getDpi().isBlank()) {
+            //     predicates.add(cb.equal(root.get("dpi"), filter.getDpi().trim()));
+            // }
             if (filter.getEstado() != null) {
                 predicates.add(cb.equal(root.get("estado"), filter.getEstado()));
             }
