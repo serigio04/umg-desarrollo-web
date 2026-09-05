@@ -20,7 +20,7 @@ export interface PageResponse<T> {
 @Injectable({ providedIn: 'root' })
 export class PacientesService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.API_BACKEND_URL}/api/pacientes`;
+  private apiUrl = `${environment.API_BACKEND_URL}/pacientes`;
 
   obtenerPacientesPaginados(filtros: any): Observable<PageResponse<any>> {
     let params = new HttpParams();
