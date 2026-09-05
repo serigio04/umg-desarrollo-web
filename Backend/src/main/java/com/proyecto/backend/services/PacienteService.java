@@ -1,9 +1,11 @@
 package com.proyecto.backend.services;
 
+import com.proyecto.backend.dtos.PageResponse;
 import com.proyecto.backend.dtos.PacienteDto;
-import java.util.List;
+import com.proyecto.backend.dtos.PacienteFilter;
+import com.proyecto.backend.entities.Paciente;
 
 public interface PacienteService {
-    PacienteDto registrarPaciente(PacienteDto pacienteDto);
-    List<PacienteDto> obtenerTodos();
+    PageResponse<Paciente> obtenerPacientesPaginados(PacienteFilter filter);
+    Paciente crearPaciente(PacienteDto dto);
 }
