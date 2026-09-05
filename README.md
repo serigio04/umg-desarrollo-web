@@ -1,4 +1,4 @@
-# 🚀 Proyecto Fullstack Dockerizado
+# Proyecto Fullstack Dockerizado
 
 Este repositorio contiene la arquitectura base para una aplicación **Fullstack** moderna. La infraestructura está completamente dockerizada para garantizar la separación de responsabilidades y la consistencia del entorno de desarrollo.
 
@@ -10,7 +10,7 @@ La solución está compuesta por las siguientes tecnologías principales:
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 El proyecto está organizado de forma modular. Hemos separado intencionalmente el código fuente de las aplicaciones de los archivos de configuración de infraestructura:
 
@@ -27,7 +27,7 @@ mi-proyecto/
 
 ---
 
-## 🔌 Servicios y Puertos
+## Servicios y Puertos
 
 Una vez que la arquitectura se encuentre en ejecución, los servicios estarán disponibles en los siguientes puertos de la máquina host para su uso y desarrollo:
 
@@ -40,13 +40,51 @@ Una vez que la arquitectura se encuentre en ejecución, los servicios estarán d
 
 ---
 
-## 🌐 Comunicación de Red Interna
+## Comunicación de Red Interna
 
 Los contenedores están configurados para operar bajo una red virtual privada gestionada por Docker. Debido a esto, la comunicación interna **no se realiza a través de `localhost`**, sino utilizando los nombres DNS automáticos asignados a cada servicio:
 
 * El **Backend** se conecta a la base de datos relacional apuntando al host interno `postgres-db:5432`.
 * El **Backend** se conecta a la base de datos NoSQL apuntando al host interno `mongo-db:27017`.
 * El **Frontend** (que se ejecuta en el navegador del usuario) interactúa con la API del Backend a través de la ruta expuesta `http://localhost:8080`.
+
+### Diagrama de Contenedores
+
+```mermaid
+graph TD
+    User((Usuario / Médico))
+    
+    subgraph Sistema [Sistema de Gestión de Pacientes]
+        SPA["Frontend SPA (Angular + SSR)"]
+        API["Backend API REST (Spring Boot 3)"]
+        DB[("Base de Datos (PostgreSQL / MySQL)")]
+    end
+    
+    User -->|Interactúa con el navegador| SPA
+    SPA -->|Peticiones HTTP/REST JWT| API
+    API -->|Lee y Escribe datos JPA| DB
+```
+
+### Diagrama de Comportamiento (Flujo Principal)
+
+El siguiente diagrama muestra el flujo general que sigue un usuario dentro de la aplicación.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Login
+    Login --> Dashboard : Autenticación Exitosa
+    Login --> Login : Credenciales Inválidas
+    
+    Dashboard --> ListarPacientes : Ver listado
+    Dashboard --> CrearPaciente : Registrar nuevo
+    
+    ListarPacientes --> FiltrarPacientes : Ingresar criterios (Nombre, Apellidos)
+    FiltrarPacientes --> ListarPacientes : Actualizar tabla (Paginada)
+    
+    CrearPaciente --> ListarPacientes : Guardar (Éxito)
+    
+    ListarPacientes --> [*] : Cerrar Sesión
+```
 
 ## Comandos 
 En la carpeta de **Docker** para compilar el proyecto
