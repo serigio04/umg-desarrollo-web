@@ -1,2 +1,25 @@
-<app-navbar *ngIf="mostrarNavbar()"></app-navbar>
-<router-outlet></router-outlet>
+<!-- === VISTA AUTENTICADA (DASHBOARD) === -->
+<div *ngIf="mostrarNavbar() || mostrarSidebar()" class="flex h-screen bg-gray-50 overflow-hidden">
+  
+  <!-- 1. Sidebar a la izquierda (Ocupará toda la altura) -->
+  <app-sidebar *ngIf="mostrarSidebar()"></app-sidebar>
+
+  <!-- 2. Contenedor de la parte derecha -->
+  <div class="flex flex-col flex-1 w-full">
+    
+    <!-- Navbar en la parte superior derecha -->
+    <app-navbar *ngIf="mostrarNavbar()"></app-navbar>
+
+    <!-- Contenido dinámico (Listado de pacientes, etc.) -->
+    <main class="flex-1 overflow-y-auto p-6">
+      <router-outlet></router-outlet>
+    </main>
+    
+  </div>
+</div>
+
+<!-- === VISTA PÚBLICA (LOGIN) === -->
+<!-- Si no hay Navbar ni Sidebar, el router-outlet usa toda la pantalla -->
+<ng-container *ngIf="!mostrarNavbar() && !mostrarSidebar()">
+  <router-outlet></router-outlet>
+</ng-container>

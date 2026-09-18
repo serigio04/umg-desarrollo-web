@@ -1,0 +1,55 @@
+<aside class="w-64 h-screen transition-transform bg-gray-800 text-white shadow-lg pt-4">
+  <div class="h-full px-3 py-4 overflow-y-auto">
+    <ul class="space-y-2 font-medium">
+      
+      @for (modulo of menuOpciones; track modulo.id) {
+        <li>
+          
+          @if (!modulo.subModulos || modulo.subModulos.length === 0) {
+            <a [routerLink]="modulo.ruta" 
+               routerLinkActive="bg-gray-700 text-white border-l-4 border-blue-500"
+               [routerLinkActiveOptions]="{exact: true}"
+               class="flex items-center p-2 rounded-lg hover:bg-gray-700 group cursor-pointer text-gray-300">
+              <span class="w-5 h-5 flex justify-center">{{ modulo.icono }}</span>
+              <span class="ms-3">{{ modulo.nombre }}</span>
+            </a>
+          } 
+          
+          @else {
+            <button (click)="toggleSubmenu(modulo.id)" 
+                    class="flex items-center w-full p-2 rounded-lg hover:bg-gray-700 group text-gray-300">
+              <span class="w-5 h-5 flex justify-center">{{ modulo.icono }}</span>
+              <span class="flex-1 ms-3 text-left whitespace-nowrap">{{ modulo.nombre }}</span>
+              <svg class="w-3 h-3 transition-transform" 
+                   [class.rotate-180]="modulosExpandidos[modulo.id]" 
+                   aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+            
+            @if (modulosExpandidos[modulo.id]) {
+              <ul class="py-2 space-y-2">
+                @for (submodulo of modulo.subModulos; track submodulo.id) {
+                  <li>
+                    <a [routerLink]="submodulo.ruta" 
+                       routerLinkActive="bg-gray-700 text-white font-bold"
+                       class="flex items-center w-full p-2 text-sm text-gray-400 transition duration-75 rounded-lg pl-11 hover:bg-gray-700 hover:text-white">
+                      <span class="mr-2">{{ submodulo.icono }}</span>
+                      {{ submodulo.nombre }}
+                    </a>
+                  </li>
+                }
+              </ul>
+            }
+          }
+          
+        </li>
+      } @empty {
+        <li class="text-gray-400 text-sm text-center p-4">
+          Cargando opciones...
+        </li>
+      }
+
+    </ul>
+  </div>
+</aside>
