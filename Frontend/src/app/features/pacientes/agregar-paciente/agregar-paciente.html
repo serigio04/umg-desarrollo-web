@@ -1,0 +1,92 @@
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-8 border border-gray-100">
+  
+  <div class="mb-8 border-b pb-4">
+    <h2 class="text-2xl font-bold text-gray-800">Registrar Nuevo Paciente</h2>
+    <p class="text-gray-500 text-sm mt-1">Ingresa los datos personales para el expediente médico.</p>
+  </div>
+
+  <form [formGroup]="pacienteForm" (ngSubmit)="guardarPaciente()">
+    
+    <!-- Grid de 2 columnas para escritorio -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Nombres -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900">Nombres *</label>
+        <input type="text" formControlName="nombres" placeholder="Ej. Juan Carlos"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        @if (pacienteForm.get('nombres')?.invalid && pacienteForm.get('nombres')?.touched) {
+          <span class="text-red-500 text-xs mt-1 block">El nombre es obligatorio (min. 3 letras)</span>
+        }
+      </div>
+
+      <!-- Apellidos -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900">Apellidos *</label>
+        <input type="text" formControlName="apellidos" placeholder="Ej. Pérez García"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        @if (pacienteForm.get('apellidos')?.invalid && pacienteForm.get('apellidos')?.touched) {
+          <span class="text-red-500 text-xs mt-1 block">El apellido es obligatorio</span>
+        }
+      </div>
+
+      <!-- Identificación -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900">Documento de Identidad *</label>
+        <input type="text" formControlName="identificacion" placeholder="Número de DPI / Cédula"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+      </div>
+
+      <!-- Fecha de Nacimiento -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900">Fecha de Nacimiento *</label>
+        <input type="date" formControlName="fechaNacimiento"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900">Teléfono *</label>
+        <input type="tel" formControlName="telefono" placeholder="Ej. 5555-1234"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+      </div>
+
+      <!-- Correo Electrónico -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900">Correo Electrónico *</label>
+        <input type="email" formControlName="email" placeholder="correo@ejemplo.com"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        @if (pacienteForm.get('email')?.errors?.['email'] && pacienteForm.get('email')?.touched) {
+          <span class="text-red-500 text-xs mt-1 block">Ingresa un correo válido</span>
+        }
+      </div>
+
+      <!-- Dirección (Ocupa 2 columnas) -->
+      <div class="md:col-span-2">
+        <label class="block mb-2 text-sm font-medium text-gray-900">Dirección</label>
+        <textarea formControlName="direccion" rows="3" placeholder="Ej. Zona 10, Ciudad..."
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="mt-8 flex items-center justify-end gap-4 border-t pt-4">
+      <button type="button" (click)="cancelar()" 
+              class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-200">
+        Cancelar
+      </button>
+      
+      <button type="submit" [disabled]="cargando"
+              class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center">
+        @if (cargando) {
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          Guardando...
+        } @else {
+          Guardar Paciente
+        }
+      </button>
+    </div>
+
+  </form>
+</div>

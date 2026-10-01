@@ -33,4 +33,8 @@ export class PacientesService {
 
     return this.http.get<PageResponse<any>>(this.apiUrl, { params });
   }
+
+  agregarPaciente(paciente: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, paciente);
+  }
 }
