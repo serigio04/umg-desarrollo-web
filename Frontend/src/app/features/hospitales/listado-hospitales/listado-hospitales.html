@@ -1,0 +1,54 @@
+<div class="contenedor-pagina">
+  
+  <div class="cabecera-pagina">
+    <div>
+      <h2 class="titulo">Directorio de Hospitales</h2>
+      <p class="subtitulo">Gestiona los centros médicos y su información de contacto.</p>
+    </div>
+    <a routerLink="/hospitales/agregar" class="btn-primario">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      Nuevo Hospital
+    </a>
+  </div>
+
+  <div class="contenedor-tabla">
+    <div class="overflow-x-auto">
+      <table class="tabla-datos">
+        <thead>
+          <tr>
+            <th>Nombre del Hospital</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th class="text-center">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (cargando) {
+            <tr>
+              <td colspan="4" class="estado-vacio">
+                <span class="animate-pulse">Cargando hospitales...</span>
+              </td>
+            </tr>
+          } @else {
+            @for (h of hospitales; track h.id) {
+              <tr>
+                <td class="font-medium text-gray-900">{{ h.nombre }}</td>
+                <td>{{ h.direccion }}</td>
+                <td>{{ h.telefono }}</td>
+                <td class="text-center">
+                  <span class="badge-activo">
+                    <span class="badge-punto"></span> Activo
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="estado-vacio">No hay hospitales registrados.</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
