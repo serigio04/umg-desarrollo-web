@@ -1,0 +1,62 @@
+<div class="contenedor-formulario">
+  
+  <div class="tarjeta">
+    <div class="tarjeta-cabecera">
+      <h2 class="titulo-formulario">Registrar Nuevo Doctor</h2>
+      <p class="subtitulo-formulario">Ingresa los datos personales y asigna el centro médico.</p>
+    </div>
+
+    <form [formGroup]="doctorForm" (ngSubmit)="guardarDoctor()" class="formulario-cuerpo">
+      <div class="grid-campos">
+        
+        <div class="grupo-input">
+          <label>Nombres <span class="requerido">*</span></label>
+          <input type="text" formControlName="nombres" class="input-control" placeholder="Ej. Carlos Roberto">
+        </div>
+
+        <div class="grupo-input">
+          <label>Apellidos <span class="requerido">*</span></label>
+          <input type="text" formControlName="apellidos" class="input-control" placeholder="Ej. Mendoza Paz">
+        </div>
+
+        <div class="grupo-input">
+          <label>Especialidad <span class="requerido">*</span></label>
+          <input type="text" formControlName="especialidad" class="input-control" placeholder="Ej. Cardiología">
+        </div>
+
+        <div class="grupo-input">
+          <label>No. Colegiado <span class="requerido">*</span></label>
+          <input type="text" formControlName="colegiado" class="input-control" placeholder="Ej. COL-12345">
+        </div>
+
+        <div class="grupo-input">
+          <label>Teléfono <span class="requerido">*</span></label>
+          <input type="text" formControlName="telefono" class="input-control" placeholder="Ej. +502 5555-4444">
+        </div>
+
+        <div class="grupo-input col-span-completo">
+          <label>Hospital Asignado <span class="requerido">*</span></label>
+          <div class="relative">
+            <select formControlName="hospitalId" class="input-control select-control">
+              <option value="" disabled selected>Selecciona un hospital de la lista...</option>
+              @for (h of hospitales; track h.id) {
+                <option [value]="h.id">{{ h.nombre }}</option>
+              }
+            </select>
+            <div class="icono-select">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="acciones-formulario">
+        <button type="button" routerLink="/doctores" class="btn-secundario">Cancelar</button>
+        <button type="submit" [disabled]="cargando || doctorForm.invalid" class="btn-guardar">
+          {{ cargando ? 'Procesando...' : 'Guardar Registro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
