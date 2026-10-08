@@ -1,59 +1,75 @@
-.contenedor-pagina {
-  @apply max-w-7xl mx-auto p-4 sm:p-6 lg:p-8;
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
-
-.cabecera-pagina {
-  @apply flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
-
-.titulo {
-  @apply text-2xl font-extrabold text-gray-900 tracking-tight;
+.btn-primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
-
-.subtitulo {
-  @apply text-sm text-gray-500 mt-1;
+.btn-primary:hover {
+  background: #1d4ed8;
 }
-
-.btn-primario {
-  @apply inline-flex items-center justify-center bg-blue-600 text-white px-5 py-2.5 text-sm font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-colors;
+.table-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
 }
-
-.contenedor-tabla {
-  @apply bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
-
-.tabla-datos {
-  @apply w-full text-sm text-left text-gray-600;
+th,
+td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
 }
-
-.tabla-datos thead {
-  @apply text-xs text-gray-500 uppercase bg-gray-50/80 border-b border-gray-200;
+th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-size: 0.85rem;
+  text-transform: uppercase;
 }
-
-.tabla-datos th {
-  @apply px-6 py-4 font-semibold;
+.patient-name {
+  font-weight: 600;
+  color: #0f172a;
 }
-
-.tabla-datos tbody {
-  @apply divide-y divide-gray-100;
+.patient-email {
+  color: #64748b;
+  font-size: 0.9rem;
 }
-
-.tabla-datos tbody tr {
-  @apply hover:bg-gray-50 transition-colors duration-200;
+.status-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
-
-.tabla-datos td {
-  @apply px-6 py-4 text-gray-500;
+.status-badge.active {
+  background: #dcfce7;
+  color: #166534;
 }
-
-.badge-activo {
-  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200;
-}
-
-.badge-punto {
-  @apply w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5;
-}
-
-.estado-vacio {
-  @apply text-center py-10 text-gray-500;
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
 }

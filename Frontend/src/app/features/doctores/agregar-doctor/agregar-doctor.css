@@ -1,63 +1,99 @@
-.contenedor-formulario {
-  @apply max-w-3xl mx-auto p-4 sm:p-6 lg:p-8;
+.container {
+  padding: 2rem;
+  margin: 0 auto;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+.header {
+  margin-bottom: 1.5rem;
+}
+.form-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
 }
 
-.tarjeta {
-  @apply bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden;
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.full-width {
+  grid-column: 1 / -1;
 }
 
-.tarjeta-cabecera {
-  @apply bg-gray-50 border-b border-gray-200 px-8 py-6;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+}
+.form-group label span {
+  color: #dc2626;
+} /* Asterisco rojo */
+
+.form-group input,
+.form-group select {
+  padding: 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background-color: #fff;
+  font-family: inherit;
+}
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.titulo-formulario {
-  @apply text-xl font-bold text-gray-900;
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
 }
 
-.subtitulo-formulario {
-  @apply text-sm text-gray-500 mt-1;
+.btn-cancel {
+  background: white;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.btn-cancel:hover {
+  background: #f8fafc;
+  color: #0f172a;
 }
 
-.formulario-cuerpo {
-  @apply p-8;
+.btn-submit {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
 }
-
-.grid-campos {
-  @apply grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6;
+.btn-submit:hover:not(:disabled) {
+  background: #1d4ed8;
 }
-
-.grupo-input label {
-  @apply block text-sm font-semibold text-gray-700 mb-2;
-}
-
-.requerido {
-  @apply text-red-500;
-}
-
-.input-control {
-  @apply w-full px-4 py-2.5 text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200;
-}
-
-.col-span-completo {
-  @apply sm:col-span-2;
-}
-
-.select-control {
-  @apply appearance-none cursor-pointer;
-}
-
-.icono-select {
-  @apply pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500;
-}
-
-.acciones-formulario {
-  @apply mt-8 pt-6 border-t border-gray-100 flex justify-end gap-3;
-}
-
-.btn-secundario {
-  @apply px-6 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors;
-}
-
-.btn-guardar {
-  @apply px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors;
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
