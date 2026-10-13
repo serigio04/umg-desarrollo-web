@@ -1,0 +1,12 @@
+Fase 1. Actualmente los pacientes solo tienen: id, nombre, appellido, email y estado. Se debe realizar la modificación para que también posean: documento de identidad, fecha de nacimiento y dirección. 
+
+Fase 2. No hay un modulo para ver el listado de doctores, hay que agregarlo al nav bar
+
+Fase 3. No hay un modulo para agregar hospitales
+
+Fase 4. Hay que agregar un modulo de citas que almacene paciente, hospital y doctor asignado, además de descripción de síntomas el modulo debe ser:
+Citas
+|- Crear cita
+|- Ver citas 
+
+Fase 2. agreguemos a los submodulos uno para ver el listado de pacientes, otro para ver el listado de doctores
