@@ -10,4 +10,8 @@ public class PacienteDto {
     private String apellidos;
     private String email;
     private LocalDate fechaNacimiento;
+    private String identificacion;
+    private String direccion;
+    private String telefono;
+    private Boolean estado;
 }

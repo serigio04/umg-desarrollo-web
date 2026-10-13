@@ -1,83 +1,53 @@
 <div class="container">
   <div class="header">
-    <h2>Listado de Pacientes</h2>
-    <span class="badge-total">Total Encontrados: {{ metadata.totalRecords }}</span>
-  </div>
-
-  <!-- Barra de Filtros -->
-  <div class="filter-card">
-    <div class="filter-group">
-      <input type="text" [(ngModel)]="filtros.nombre" (keyup.enter)="aplicarFiltros()" placeholder="Nombre" />
-      <input type="text" [(ngModel)]="filtros.apellidos" (keyup.enter)="aplicarFiltros()" placeholder="Apellidos" />
-      
-      <select [(ngModel)]="filtros.estado" (change)="aplicarFiltros()">
-        <option [ngValue]="null">-- Todos los Estados --</option>
-        <option [ngValue]="true">Activo</option>
-        <option [ngValue]="false">Inactivo</option>
-      </select>
-
-      <button class="btn-search" (click)="aplicarFiltros()">Buscar</button>
-      <button class="btn-reset" (click)="limpiarFiltros()">Limpiar</button>
+    <div>
+      <h2 style="margin: 0; color: #0f172a;">Directorio de Pacientes</h2>
+      <span style="color: #64748b; font-size: 0.9rem;">Consulta de expedientes y datos de contacto.</span>
     </div>
+    <a routerLink="/pacientes/agregar" class="btn-primary">+ Nuevo Paciente</a>
   </div>
 
-  <div *ngIf="cargando" class="loading-state">Cargando pacientes...</div>
-  <div *ngIf="errorMsg" class="error-alert">{{ errorMsg }}</div>
-
-  <!-- Tabla -->
-  <div *ngIf="!cargando && pacientes.length > 0" class="table-card">
+  <div class="table-card">
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Email</th>
-          <th>Estado</th>
+          <th>Identificación (DPI)</th>
+          <th>Nombre Completo</th>
+          <th>Fecha Nac.</th>
+          <th>Contacto</th>
+          <th>Dirección</th>
+          <th style="text-align: center;">Estado</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let p of pacientes">
-          <td>#{{ p.id }}</td>
-          <td class="patient-name">{{ p.nombre }}</td>
-          <td>{{ p.apellidos }}</td>
-          <td class="patient-email">{{ p.email || 'N/A' }}</td>
-          <td>
-            <span class="status-badge" [ngClass]="p.estado !== false ? 'active' : 'inactive'">
-              {{ p.estado !== false ? 'Activo' : 'Inactivo' }}
-            </span>
-          </td>
-        </tr>
+        @if (cargando) {
+          <tr>
+            <td colspan="6" class="loading-state">Cargando expediente de pacientes...</td>
+          </tr>
+        } @else {
+          @for (p of pacientes; track p.id) {
+            <tr>
+              <td class="patient-name">{{ p.identificacion }}</td>
+              <td>{{ p.nombres }} {{ p.apellidos }}</td>
+              <td class="patient-email">{{ p.fechaNacimiento | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <div>{{ p.telefono }}</div>
+                <div class="patient-email">{{ p.email }}</div>
+              </td>
+              <td class="patient-email">{{ p.direccion || 'N/A' }}</td>
+              <td style="text-align: center;">
+                <span class="status-badge" [ngClass]="p.estado ? 'active' : 'inactive'">
+                  {{ p.estado ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">No hay pacientes registrados.</td>
+            </tr>
+          }
+        }
       </tbody>
     </table>
-
-    <!-- Paginador -->
-    <div class="pagination-bar">
-      <div class="page-size-selector">
-        <label>Mostrar: </label>
-        <select [(ngModel)]="filtros.size" (change)="cambiarTamanoPagina()">
-          <option [ngValue]="50">50</option>
-          <option [ngValue]="100">100</option>
-          <option [ngValue]="200">200</option>
-        </select>
-        <span>registros por página</span>
-      </div>
-
-      <div class="pagination-controls">
-        <button [disabled]="!metadata.hasPreviousPage" (click)="cambiarPagina(metadata.page - 1)">
-          &laquo; Anterior
-        </button>
-        
-        <span>Página {{ metadata.page + 1 }} de {{ metadata.totalPages }}</span>
-        
-        <button [disabled]="!metadata.hasNextPage" (click)="cambiarPagina(metadata.page + 1)">
-          Siguiente &raquo;
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="!cargando && pacientes.length === 0 && !errorMsg" class="empty-state">
-    No se encontraron pacientes con los criterios especificados.
   </div>
 </div>

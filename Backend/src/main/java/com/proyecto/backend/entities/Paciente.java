@@ -23,4 +23,15 @@ public class Paciente {
 
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
+
+    @Column(nullable = false, unique = true)
+    private String identificacion;
+    
+    @Column(length = 255)
+    private String direccion;
+
+    @Column(length = 15)
+    private String telefono;
+    
+    private Boolean estado;
 }
