@@ -7,7 +7,7 @@ import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 import { AgregarDoctorComponent } from './features/doctores/agregar-doctor/agregar-doctor';
 import { ListadoHospitalesComponent } from './features/hospitales/listado-hospitales/listado-hospitales';
-import { ListadoDoctoresComponent } from './features/doctores/listado-doctores/listado-doctores';
+import { AgregarHospitalComponent } from './features/hospitales/agregar-hospital/agregar-hospital';
 
 export const routes: Routes = [
   { 
@@ -43,11 +43,11 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_ADMIN'] }
   },
-  {
-    path: 'doctores',
-    component: ListadoDoctoresComponent, 
+  { 
+    path: 'hospitales/agregar', 
+    component: AgregarHospitalComponent,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] }
+    data: { roles: ['ROLE_ADMIN'] }
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' } // Redirige por defecto al login
 ];

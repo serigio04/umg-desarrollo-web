@@ -1,0 +1,49 @@
+<div class="container" style="max-width: 650px;">
+  <div class="header">
+    <div>
+      <h2 style="margin: 0; color: #0f172a;">Registrar Nuevo Hospital</h2>
+      <span style="color: #64748b; font-size: 0.9rem;">Ingresa la información básica del centro médico.</span>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="hospitalForm" (ngSubmit)="guardarHospital()">
+      
+      <div class="form-grid">
+        
+        <div class="form-group">
+          <label>Nombre del Hospital <span>*</span></label>
+          <input type="text" formControlName="nombre" placeholder="Ej. Hospital San Juan de Dios">
+          @if (hospitalForm.get('nombre')?.invalid && hospitalForm.get('nombre')?.touched) {
+            <span class="error-text">El nombre es obligatorio (mínimo 3 caracteres).</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Dirección <span>*</span></label>
+          <input type="text" formControlName="direccion" placeholder="Ej. 10a Avenida 12-45, Zona 11">
+          @if (hospitalForm.get('direccion')?.invalid && hospitalForm.get('direccion')?.touched) {
+            <span class="error-text">La dirección es obligatoria.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Teléfono de Contacto <span>*</span></label>
+          <input type="text" formControlName="telefono" placeholder="Ej. 2233-4455">
+          @if (hospitalForm.get('telefono')?.invalid && hospitalForm.get('telefono')?.touched) {
+            <span class="error-text">Ingresa un número de teléfono válido.</span>
+          }
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="button" (click)="cancelar()" class="btn-cancel">Cancelar</button>
+        <button type="submit" [disabled]="cargando || hospitalForm.invalid" class="btn-submit">
+          {{ cargando ? 'Guardando...' : 'Guardar Hospital' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
