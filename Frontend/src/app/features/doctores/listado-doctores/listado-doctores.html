@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="header">
+    <div>
+      <h2 style="margin: 0; color: #0f172a;">Directorio de Doctores</h2>
+      <span style="color: #64748b; font-size: 0.9rem;">Médicos colegiados registrados en el sistema.</span>
+    </div>
+    <a routerLink="/doctores/agregar" class="btn-primary">+ Agregar Doctor</a>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre Completo</th>
+          <th>Especialidad</th>
+          <th>No. Colegiado</th>
+          <th>Teléfono</th>
+          <th>Hospital Asignado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando) {
+          <tr>
+            <td colspan="5" class="loading-state">Cargando la lista de doctores...</td>
+          </tr>
+        } @else {
+          @for (d of doctores; track d.id) {
+            <tr>
+              <td class="patient-name">Dr. {{ d.nombres }} {{ d.apellidos }}</td>
+              <td><span class="badge-specialty">{{ d.especialidad }}</span></td>
+              <td class="patient-email">{{ d.colegiado }}</td>
+              <td class="patient-email">{{ d.telefono }}</td>
+              <td>{{ d.hospital?.nombre || 'Sin Asignar' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty-state">No hay doctores registrados.</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

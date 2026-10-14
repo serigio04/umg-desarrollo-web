@@ -7,6 +7,7 @@ import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 import { AgregarDoctorComponent } from './features/doctores/agregar-doctor/agregar-doctor';
 import { ListadoHospitalesComponent } from './features/hospitales/listado-hospitales/listado-hospitales';
+import { ListadoDoctoresComponent } from './features/doctores/listado-doctores/listado-doctores';
 
 export const routes: Routes = [
   { 
@@ -16,13 +17,13 @@ export const routes: Routes = [
     path: 'pacientes', 
     component: ListadoPacientesComponent, 
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_OPERADOR'] } 
+    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] } 
   },
   { 
     path: 'pacientes/agregar', 
     component: AgregarPacienteComponent, 
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_OPERADOR'] } 
+    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] } 
   },
   {
     path: 'administracion/usuarios',
@@ -34,13 +35,19 @@ export const routes: Routes = [
     path: 'hospitales', 
     component: ListadoHospitalesComponent,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_OPERADOR'] }
+    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] }
   },
   { 
     path: 'doctores/agregar', 
     component:  AgregarDoctorComponent,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'doctores',
+    component: ListadoDoctoresComponent, 
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] }
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' } // Redirige por defecto al login
 ];
