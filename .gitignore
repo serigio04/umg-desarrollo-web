@@ -7,3 +7,4 @@ apirest-demo/
 keys/
 *.env
 Frontend/src/environments/environment.ts
+*.class
