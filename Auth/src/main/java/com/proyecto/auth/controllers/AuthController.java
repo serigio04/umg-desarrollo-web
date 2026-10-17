@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*") // Permite llamadas desde cualquier origen (Postman, Render, Angular)
 public class AuthController {
 
     private final UsuarioRepository usuarioRepository;
@@ -25,7 +26,6 @@ public class AuthController {
     private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/register")
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> registrar(@RequestBody RegistroRequest request) {
         if (usuarioRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity.badRequest().body("El usuario ya existe.");
@@ -59,7 +59,6 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) throws Exception {
         Optional<Usuario> userOpt = usuarioRepository.findByUsername(request.getUsername());
 
