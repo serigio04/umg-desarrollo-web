@@ -4,7 +4,7 @@ proyecto-juego/
 proyecto-enrutador/
 *.pdf
 apirest-demo/
-keys/
 *.env
-Frontend/src/environments/environment.ts
 *.class
+Frontend/src/environments/environment.ts
+target/
