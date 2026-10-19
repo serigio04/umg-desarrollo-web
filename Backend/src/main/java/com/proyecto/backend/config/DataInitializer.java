@@ -17,8 +17,8 @@ public class DataInitializer {
         return args -> {
             // Solo inserta si la tabla de pacientes tiene 5 o menos registros
             if (repository.count() <= 5) {
-                String[] nombres = {"Carlos", "María", "José", "Ana", "Luis", "Sofia", "Juan", "Elena", "Pedro", "Laura", "Diego", "Lucía"};
-                String[] apellidos = {"Gómez", "López", "Martínez", "Hernández", "García", "Pérez", "Rodríguez", "Sánchez", "Ramírez", "Flores"};
+                String[] nombres = {"Carlos", "María", "José", "Ana", "Luis", "Sofia", "Juan", "Elena", "Pedro", "Laura", "Diego", "Lucía", "Nataly", "Miguel", "Valentina", "Andrés", "Camila", "Javier", "Isabella", "Fernando"};
+                String[] apellidos = {"Gómez", "López", "Martínez", "Hernández", "García", "Pérez", "Rodríguez", "Sánchez", "Ramírez", "Flores", "Torres", "Rivera", "Vargas", "Castillo", "Rojas", "Mendoza", "Cruz", "Ortiz", "Silva", "Morales"};
                 Random random = new Random();
 
                 for (int i = 1; i <= 100; i++) {
@@ -30,6 +30,9 @@ public class DataInitializer {
                     LocalDate fechaFin = LocalDate.of(2005, 12, 31);
                     long diasEntreFechas = fechaFin.toEpochDay() - fechaInicio.toEpochDay();
                     paciente.setFechaNacimiento(fechaInicio.plusDays(random.nextLong(diasEntreFechas + 1)));
+                    paciente.setIdentificacion(random.nextInt(90000000) + 10000000 + "");
+                    paciente.setDireccion("Calle " + (random.nextInt(100) + 1) + ", Ciudad " + (random.nextInt(50) + 1));
+                    paciente.setTelefono("+502 " + (random.nextInt(90000000) + 60000000));
 
                     repository.save(paciente);
                 }
