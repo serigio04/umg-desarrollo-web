@@ -31,16 +31,16 @@ public class DoctorService {
 
     @Transactional
     public DoctorDto crear(DoctorDto dto) {
-        // 1. Validar que se envíe el ID del hospital obligatoriamente
+        // Validar que se envíe el ID del hospital obligatoriamente
         if (dto.getHospitalId() == null) {
             throw new IllegalArgumentException("El campo 'hospitalId' es obligatorio para registrar un doctor.");
         }
 
-        // 2. Buscar el hospital por ID
+        // Buscar el hospital por ID
         Hospital hospital = hospitalRepository.findById(dto.getHospitalId())
                 .orElseThrow(() -> new RuntimeException("Hospital no encontrado con ID: " + dto.getHospitalId()));
 
-        // 3. Mapear DTO a la Entidad Doctor
+        // Mapear DTO a la Entidad Doctor
         Doctor doctor = new Doctor();
         doctor.setNombres(dto.getNombres());
         doctor.setApellidos(dto.getApellidos());
@@ -50,14 +50,14 @@ public class DoctorService {
         doctor.setActivo(true);
         doctor.setHospital(hospital);
 
-        // 4. Guardar y retornar el resultado en formato DTO (evita proxies de Hibernate en la respuesta)
+        // Guardar y retornar el resultado en formato DTO (evita proxies de Hibernate en la respuesta)
         Doctor doctorGuardado = doctorRepository.save(doctor);
         return convertirADto(doctorGuardado);
     }
 
     private DoctorDto convertirADto(Doctor doctor) {
         DoctorDto dto = new DoctorDto();
-        dto.setId(doctor.getId()); // <-- Asignación del ID del doctor
+        dto.setId(doctor.getId());
         dto.setNombres(doctor.getNombres());
         dto.setApellidos(doctor.getApellidos());
         dto.setEspecialidad(doctor.getEspecialidad());
