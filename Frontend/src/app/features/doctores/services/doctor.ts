@@ -20,7 +20,7 @@ export interface DoctorResponse extends Omit<DoctorRequest, 'hospitalId'> {
 @Injectable({ providedIn: 'root' })
 export class DoctorService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.API_BACKEND_URL}/doctores`;
+  private apiUrl = `${environment.API_BACKEND_URL}/api/doctores`;
 
   obtenerActivos(): Observable<DoctorResponse[]> {
     return this.http.get<DoctorResponse[]>(this.apiUrl);

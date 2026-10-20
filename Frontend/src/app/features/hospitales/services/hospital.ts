@@ -14,7 +14,7 @@ export interface Hospital {
 @Injectable({ providedIn: 'root' })
 export class HospitalService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.API_BACKEND_URL}/hospitales`;
+  private apiUrl = `${environment.API_BACKEND_URL}/api/hospitales`;
 
   obtenerActivos(): Observable<Hospital[]> {
     return this.http.get<Hospital[]>(this.apiUrl);

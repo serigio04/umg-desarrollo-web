@@ -16,7 +16,7 @@ export interface MenuOpcion {
 })
 export class MenuService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.API_BACKEND_URL}/accesos/menu`;
+  private apiUrl = `${environment.API_BACKEND_URL}/api/accesos/menu`;
 
   obtenerMenuDinamico(): Observable<MenuOpcion[]> {
     return this.http.get<MenuOpcion[]>(this.apiUrl);

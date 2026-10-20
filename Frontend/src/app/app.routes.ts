@@ -10,6 +10,7 @@ import { ListadoHospitalesComponent } from './features/hospitales/listado-hospit
 import { AgregarHospitalComponent } from './features/hospitales/agregar-hospital/agregar-hospital';
 import { ListadoDoctoresComponent } from './features/doctores/listado-doctores/listado-doctores';
 import { CitasComponent } from './features/citas/cita';
+import { UsuariosComponent } from './features/administracion/usuarios/usuarios';
 
 export const routes: Routes = [
   { 
@@ -59,7 +60,7 @@ export const routes: Routes = [
   },  
   {
     path: 'administracion/usuarios',
-    component: ListadoPacientesComponent, 
+    component: UsuariosComponent, 
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_ADMIN'] }
   },
