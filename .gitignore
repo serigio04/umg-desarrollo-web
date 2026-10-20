@@ -6,5 +6,4 @@ proyecto-enrutador/
 apirest-demo/
 *.env
 *.class
-Frontend/src/environments/environment.ts
 target/
