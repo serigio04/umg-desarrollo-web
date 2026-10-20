@@ -9,8 +9,8 @@ import { environment } from '../../../environments/environment';
   selector: 'app-citas',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './citas.html',
-  styleUrls: ['./citas.css']
+  templateUrl: './cita.html',
+  styleUrls: ['./cita.css']
 })
 export class CitasComponent implements OnInit {
   private citaService = inject(CitaService);
