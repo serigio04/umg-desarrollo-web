@@ -25,6 +25,12 @@ public class JwtFilter extends OncePerRequestFilter {
         this.jwtUtils = jwtUtils;
     }
 
+    // 1. Salta el filtro por completo para peticiones OPTIONS (CORS preflight)
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return "OPTIONS".equalsIgnoreCase(request.getMethod());
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -38,15 +44,15 @@ public class JwtFilter extends OncePerRequestFilter {
                 String username = claims.getSubject();
 
                 if (username != null) {
-                    // 2. Extraer el claim de roles
+                    // Extraer el claim de roles
                     List<String> roles = claims.get("roles", List.class);
                     
-                    // 3. Convertir la lista de strings a una lista de SimpleGrantedAuthority
+                    // Convertir la lista a SimpleGrantedAuthority
                     List<SimpleGrantedAuthority> authorities = (roles != null) 
                             ? roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()) 
                             : Collections.emptyList();
 
-                    // 4. Inyectar las authorities en lugar de la lista vacía
+                    // Inyectar las authorities en el contexto de seguridad
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                             
@@ -56,6 +62,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.clearContext();
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }
