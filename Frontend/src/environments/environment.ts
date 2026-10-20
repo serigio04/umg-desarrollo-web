@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  API_AUTH_URL: 'http://localhost:8081/api/auth',
-  API_BACKEND_URL: 'http://localhost:8080/api'
+  API_AUTH_URL: 'https://api-seguridad-clinica.onrender.com',
+  API_BACKEND_URL: 'https://api-clinica.onrender.com'
 };
