@@ -130,3 +130,23 @@
   color: #94a3b8;
   font-size: 0.875rem;
 }
+
+.menu-item-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.group-link {
+  flex-grow: 1; /* El enlace toma todo el espacio posible */
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+}

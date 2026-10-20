@@ -18,15 +18,25 @@
           
           <!-- Opción con submódulos -->
           @else {
-            <button type="button" (click)="toggleSubmenu(modulo.id)" class="menu-btn">
-              <span class="icon">{{ modulo.icono }}</span>
-              <span class="menu-text">{{ modulo.nombre }}</span>
-              <svg class="arrow-icon" 
-                   [class.rotated]="modulosExpandidos[modulo.id]" 
-                   aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-              </svg>
-            </button>
+            <div class="menu-item-group">
+              <!-- Enlace principal del módulo -->
+              <a [routerLink]="modulo.ruta" 
+                 routerLinkActive="active"
+                 [routerLinkActiveOptions]="{exact: true}"
+                 class="menu-link group-link">
+                <span class="icon">{{ modulo.icono }}</span>
+                <span class="menu-text">{{ modulo.nombre }}</span>
+              </a>
+              
+              <!-- Botón exclusivo para expandir/colapsar -->
+              <button type="button" (click)="toggleSubmenu(modulo.id)" class="toggle-btn" aria-label="Toggle submenu">
+                <svg class="arrow-icon" 
+                     [class.rotated]="modulosExpandidos[modulo.id]" 
+                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+              </button>
+            </div>
             
             @if (modulosExpandidos[modulo.id]) {
               <ul class="submenu">
