@@ -25,7 +25,7 @@ export class AuthService {
   } 
 
   login(credentials: { username: string; password: string }) {
-    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post<any>(`${this.apiUrl}/api/auth/login`, credentials).pipe(
       tap(response => {
         if (response.token) {
           localStorage.setItem('token', response.token);
