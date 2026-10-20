@@ -8,6 +8,8 @@ import { roleGuard } from './core/guards/role-guard';
 import { AgregarDoctorComponent } from './features/doctores/agregar-doctor/agregar-doctor';
 import { ListadoHospitalesComponent } from './features/hospitales/listado-hospitales/listado-hospitales';
 import { AgregarHospitalComponent } from './features/hospitales/agregar-hospital/agregar-hospital';
+import { ListadoDoctoresComponent } from './features/doctores/listado-doctores/listado-doctores';
+import { CitasComponent } from './features/citas/cita';
 
 export const routes: Routes = [
   { 
@@ -20,22 +22,28 @@ export const routes: Routes = [
     data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] } 
   },
   { 
-    path: 'pacientes/agregar', 
-    component: AgregarPacienteComponent, 
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] } 
-  },
-  {
-    path: 'administracion/usuarios',
-    component: ListadoPacientesComponent, 
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['ROLE_ADMIN'] }
-  },
-  { 
     path: 'hospitales', 
     component: ListadoHospitalesComponent,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] }
+  },
+  { 
+    path: 'doctores', 
+    component: ListadoDoctoresComponent,
+    canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] }
+  },
+  {
+    path: 'citas',
+    component: CitasComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] }
+  },
+  { 
+    path: 'pacientes/agregar', 
+    component: AgregarPacienteComponent, 
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] } 
   },
   { 
     path: 'doctores/agregar', 
@@ -46,6 +54,12 @@ export const routes: Routes = [
   { 
     path: 'hospitales/agregar', 
     component: AgregarHospitalComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ROLE_ADMIN'] }
+  },  
+  {
+    path: 'administracion/usuarios',
+    component: ListadoPacientesComponent, 
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_ADMIN'] }
   },
