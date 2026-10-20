@@ -1,11 +1,33 @@
 <div class="container">
   <div class="header">
-    <div>
-      <h2 style="margin: 0; color: #0f172a;">Directorio de Pacientes</h2>
-      <span style="color: #64748b; font-size: 0.9rem;">Consulta de expedientes y datos de contacto.</span>
+    <div class="header-titles">
+      <h2>Directorio de Pacientes</h2>
+      <span class="subtitle">Consulta de expedientes y datos de contacto.</span>
+      <div class="total-records">
+        Total Encontrados: {{ metadata.totalRecords }}
+      </div>
     </div>
     <a routerLink="/pacientes/agregar" class="btn-primary">+ Nuevo Paciente</a>
   </div>
+
+  <!-- Barra de Filtros -->
+  <div class="filter-card">
+    <input type="text" [(ngModel)]="filtros.nombre" (keyup.enter)="aplicarFiltros()" placeholder="Nombre" />
+    <input type="text" [(ngModel)]="filtros.apellidos" (keyup.enter)="aplicarFiltros()" placeholder="Apellidos" />
+    
+    <select [(ngModel)]="filtros.estado" (change)="aplicarFiltros()">
+      <option [ngValue]="null">-- Todos los Estados --</option>
+      <option [ngValue]="true">Activo</option>
+      <option [ngValue]="false">Inactivo</option>
+    </select>
+
+    <button class="btn-primary" (click)="aplicarFiltros()">Buscar</button>
+    <button class="btn-secondary" (click)="limpiarFiltros()">Limpiar</button>
+  </div>
+
+  @if (errorMsg) {
+    <div class="error-alert">{{ errorMsg }}</div>
+  }
 
   <div class="table-card">
     <table>
@@ -16,13 +38,13 @@
           <th>Fecha Nac.</th>
           <th>Contacto</th>
           <th>Dirección</th>
-          <th style="text-align: center;">Estado</th>
+          <th class="text-center">Estado</th>
         </tr>
       </thead>
       <tbody>
         @if (cargando) {
           <tr>
-            <td colspan="6" class="loading-state">Cargando expediente de pacientes...</td>
+            <td colspan="6" class="table-message">Cargando expediente de pacientes...</td>
           </tr>
         } @else {
           @for (p of pacientes; track p.id) {
@@ -35,7 +57,7 @@
                 <div class="patient-email">{{ p.email }}</div>
               </td>
               <td class="patient-email">{{ p.direccion || 'N/A' }}</td>
-              <td style="text-align: center;">
+              <td class="text-center">
                 <span class="status-badge" [ngClass]="p.estado ? 'active' : 'inactive'">
                   {{ p.estado ? 'Activo' : 'Inactivo' }}
                 </span>
@@ -43,11 +65,38 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="6" class="empty-state">No hay pacientes registrados.</td>
+              <td colspan="6" class="table-message empty-state">No hay pacientes registrados con esos filtros.</td>
             </tr>
           }
         }
       </tbody>
     </table>
+
+    <!-- Paginador -->
+    @if (!cargando && pacientes.length > 0) {
+      <div class="pagination-bar">
+        <div class="page-size-selector">
+          <label>Mostrar: </label>
+          <select [(ngModel)]="filtros.size" (change)="cambiarTamanoPagina()">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+          <span class="text-muted">registros</span>
+        </div>
+
+        <div class="pagination-controls">
+          <button [disabled]="!metadata.hasPreviousPage" (click)="cambiarPagina(metadata.page - 1)">
+            &laquo; Anterior
+          </button>
+          
+          <span class="page-info">Página {{ metadata.page + 1 }} de {{ metadata.totalPages }}</span>
+          
+          <button [disabled]="!metadata.hasNextPage" (click)="cambiarPagina(metadata.page + 1)">
+            Siguiente &raquo;
+          </button>
+        </div>
+      </div>
+    }
   </div>
 </div>
