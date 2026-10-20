@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CitaService, CitaDto } from './services/cita';
 import { HttpClient } from '@angular/common/http';
@@ -16,7 +16,8 @@ export class CitasComponent implements OnInit {
   private citaService = inject(CitaService);
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
-  private cd = inject(ChangeDetectorRef);
+  private cdr = inject(ChangeDetectorRef);
+  private platformId = inject(PLATFORM_ID);
 
   citas: CitaDto[] = [];
   pacientes: any[] = [];
@@ -37,9 +38,10 @@ export class CitasComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.cargarCitas();
-    this.cargarListasCatalogos();
-    this.cd.detectChanges();
+    if (isPlatformBrowser(this.platformId)) {
+      this.cargarCitas();
+      this.cargarListasCatalogos();
+    }
   }
 
   cargarCitas(): void {
@@ -48,12 +50,12 @@ export class CitasComponent implements OnInit {
       next: (data) => {
         this.citas = data;
         this.cargando = false;
-        this.cd.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Error al obtener citas:', err);
         this.cargando = false;
-        this.cd.detectChanges();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -87,12 +89,12 @@ export class CitasComponent implements OnInit {
       next: () => {
         this.cargarCitas();
         this.cerrarModal();
-        this.cd.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Error al agendar cita:', err);
         this.errorMensaje = 'No se pudo guardar la cita. Verifique los datos enviados.';
-        this.cd.detectChanges();
+        this.cdr.markForCheck();
       }
     });
   }

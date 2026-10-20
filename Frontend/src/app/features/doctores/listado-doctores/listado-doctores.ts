@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DoctorService, DoctorResponse } from '../services/doctor';
 
@@ -13,12 +13,17 @@ import { DoctorService, DoctorResponse } from '../services/doctor';
 export class ListadoDoctoresComponent implements OnInit {
   private doctorService = inject(DoctorService);
   private cdr = inject(ChangeDetectorRef);
+  private platformId = inject(PLATFORM_ID);
 
   doctores: DoctorResponse[] = [];
   cargando = true;
 
   ngOnInit(): void {
-    this.obtenerDoctores();
+    if (isPlatformBrowser(this.platformId)) {
+      this.obtenerDoctores();
+    } else {
+      this.cargando = false;
+    }
   }
 
   obtenerDoctores(): void {
