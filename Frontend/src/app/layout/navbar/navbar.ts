@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 
@@ -10,16 +10,25 @@ import { AuthService } from '../../core/services/auth';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
+  private cdr = inject(ChangeDetectorRef);
 
-  esAdmin(): boolean {
-    return this.authService.tieneRol(['ADMIN']);
+  isAdmin: boolean = false;
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isAdmin = this.authService.tieneRol(['ADMIN']);
+      this.cdr.detectChanges();
+    }
   }
 
   cerrarSesion() {
-    localStorage.removeItem('token');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('token');
+    }
     this.router.navigate(['/login']);
   }
 }

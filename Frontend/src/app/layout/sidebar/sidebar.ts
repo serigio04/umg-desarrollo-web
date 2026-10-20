@@ -1,7 +1,7 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { MenuService, MenuOpcion } from '../../core/services/menu';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MenuService, MenuOpcion } from '../../core/services/menu';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,20 +13,26 @@ import { RouterModule } from '@angular/router';
 export class SidebarComponent implements OnInit {
   menuService = inject(MenuService);
   private cdr = inject(ChangeDetectorRef);
+  private platformId = inject(PLATFORM_ID);
 
   menuOpciones: MenuOpcion[] = [];
   isSidebarOpen = true; 
   modulosExpandidos: { [key: number]: boolean } = {}; 
 
   ngOnInit(): void {
-    this.menuService.obtenerMenuDinamico().subscribe({
-      next: (menu) => {
-        console.log('Menú cargado:', menu);
-        this.menuOpciones = menu;
-        this.cdr.markForCheck(); // Notificacion a angular al detectar el cambio
-      },
-      error: (err) => console.error('Error al cargar menú', err)
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.menuService.obtenerMenuDinamico().subscribe({
+        next: (menu) => {
+          console.log('Menú cargado:', menu);
+          this.menuOpciones = menu;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al cargar menú', err);
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 
   toggleSidebar(): void {
@@ -35,6 +41,6 @@ export class SidebarComponent implements OnInit {
 
   toggleSubmenu(id: number): void {
     this.modulosExpandidos[id] = !this.modulosExpandidos[id];
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 }

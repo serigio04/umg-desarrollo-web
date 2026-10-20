@@ -6,7 +6,8 @@
         <a routerLink="/pacientes" routerLinkActive="active">Pacientes</a>
         <a routerLink="/doctores" routerLinkActive="active">Doctores</a>
         <a routerLink="/hospitales" routerLinkActive="active">Hospitales</a>
-        <a *ngIf="esAdmin()" routerLink="/administracion/usuarios" routerLinkActive="active">Gestión de Usuarios</a>
+        <a routerLink="/citas" routerLinkActive="active">Citas</a>
+        <a *ngIf="isAdmin" routerLink="/administracion/usuarios" routerLinkActive="active">Gestión de Usuarios</a>
     </div>
     <button class="btn-logout" (click)="cerrarSesion()">Cerrar Sesión</button>
 </nav>
