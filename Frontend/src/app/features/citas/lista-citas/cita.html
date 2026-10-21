@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="header">
+    <div class="header-titles">
+      <h2>Directorio de Citas</h2>
+      <span class="subtitle">Gestión de citas médicas programadas.</span>
+    </div>
+    <!-- Este botón ahora navega al nuevo componente -->
+    <a routerLink="/citas/agregar" class="btn-primary">+ Nueva Cita</a>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha y Hora</th>
+          <th>Motivo</th>
+          <th>Estado</th>
+          <!-- Agrega más columnas si lo necesitas -->
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando) {
+          <tr>
+            <td colspan="3" class="table-message">Cargando citas...</td>
+          </tr>
+        } @else {
+          @for (cita of citas; track cita.id) {
+            <tr>
+              <td>{{ cita.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ cita.motivo }}</td>
+              <td>
+                <span class="status-badge active">{{ cita.estado }}</span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="table-message empty-state">No hay citas registradas.</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

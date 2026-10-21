@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="header">
+    <div class="header-titles">
+      <h2>Agendar Nueva Cita</h2>
+      <span class="subtitle">Complete los datos para programar la cita médica.</span>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="citaForm" (ngSubmit)="guardarCita()">
+      
+      @if (errorMensaje) {
+        <div class="error-alert">{{ errorMensaje }}</div>
+      }
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Paciente</label>
+          <select formControlName="pacienteId" class="form-control">
+            <option value="">Seleccione un paciente</option>
+            @for (p of pacientes; track p.id) {
+              <option [value]="p.id">{{ p.nombres }} {{ p.apellidos }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Doctor</label>
+          <select formControlName="doctorId" class="form-control">
+            <option value="">Seleccione un doctor</option>
+            @for (d of doctores; track d.id) {
+              <option [value]="d.id">{{ d.nombres }} {{ d.apellidos }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Hospital</label>
+          <select formControlName="hospitalId" class="form-control">
+            <option value="">Seleccione un hospital</option>
+            @for (h of hospitales; track h.id) {
+              <option [value]="h.id">{{ h.nombre }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Fecha y Hora</label>
+          <input type="datetime-local" formControlName="fechaHora" class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label>Motivo de la cita</label>
+        <textarea formControlName="motivo" rows="3" class="form-control"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/citas" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary" [disabled]="citaForm.invalid">Guardar Cita</button>
+      </div>
+    </form>
+  </div>
+</div>

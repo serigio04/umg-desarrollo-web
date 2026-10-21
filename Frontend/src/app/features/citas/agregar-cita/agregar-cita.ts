@@ -1,31 +1,27 @@
-import { ChangeDetectorRef, Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CitaService, CitaDto } from './services/cita';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { CitaService, CitaDto } from '../services/cita';
+import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-citas',
+  selector: 'app-agregar-cita',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './cita.html',
-  styleUrls: ['./cita.css']
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  templateUrl: './agregar-cita.html',
+  styleUrl: './cita.css'
 })
-export class CitasComponent implements OnInit {
+export class AgregarCitaComponent implements OnInit {
   private citaService = inject(CitaService);
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
-  private cdr = inject(ChangeDetectorRef);
-  private platformId = inject(PLATFORM_ID);
+  private router = inject(Router);
 
-  citas: CitaDto[] = [];
   pacientes: any[] = [];
   doctores: any[] = [];
   hospitales: any[] = [];
-
-  mostrarModal = false;
-  cargando = false;
   errorMensaje = '';
 
   citaForm: FormGroup = this.fb.group({
@@ -38,26 +34,7 @@ export class CitasComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.cargarCitas();
-      this.cargarListasCatalogos();
-    }
-  }
-
-  cargarCitas(): void {
-    this.cargando = true;
-    this.citaService.obtenerCitas().subscribe({
-      next: (data) => {
-        this.citas = data;
-        this.cargando = false;
-        this.cdr.markForCheck();
-      },
-      error: (err) => {
-        console.error('Error al obtener citas:', err);
-        this.cargando = false;
-        this.cdr.markForCheck();
-      }
-    });
+    this.cargarListasCatalogos();
   }
 
   cargarListasCatalogos(): void {
@@ -65,16 +42,6 @@ export class CitasComponent implements OnInit {
     this.http.get<any[]>(`${url}/api/pacientes`).subscribe(data => this.pacientes = data);
     this.http.get<any[]>(`${url}/api/doctores`).subscribe(data => this.doctores = data);
     this.http.get<any[]>(`${url}/api/hospitales`).subscribe(data => this.hospitales = data);
-  }
-
-  abrirModal(): void {
-    this.mostrarModal = true;
-    this.errorMensaje = '';
-    this.citaForm.reset({ estado: 'PENDIENTE' });
-  }
-
-  cerrarModal(): void {
-    this.mostrarModal = false;
   }
 
   guardarCita(): void {
@@ -87,14 +54,12 @@ export class CitasComponent implements OnInit {
 
     this.citaService.crearCita(nuevaCita).subscribe({
       next: () => {
-        this.cargarCitas();
-        this.cerrarModal();
-        this.cdr.markForCheck();
+        // Si tiene éxito, regresamos a la lista de citas
+        this.router.navigate(['/citas']);
       },
       error: (err) => {
         console.error('Error al agendar cita:', err);
         this.errorMensaje = 'No se pudo guardar la cita. Verifique los datos enviados.';
-        this.cdr.markForCheck();
       }
     });
   }

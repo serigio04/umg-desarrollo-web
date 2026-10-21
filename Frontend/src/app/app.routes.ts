@@ -9,8 +9,9 @@ import { AgregarDoctorComponent } from './features/doctores/agregar-doctor/agreg
 import { ListadoHospitalesComponent } from './features/hospitales/listado-hospitales/listado-hospitales';
 import { AgregarHospitalComponent } from './features/hospitales/agregar-hospital/agregar-hospital';
 import { ListadoDoctoresComponent } from './features/doctores/listado-doctores/listado-doctores';
-import { CitasComponent } from './features/citas/cita';
+import { CitasComponent } from './features/citas/lista-citas/cita';
 import { UsuariosComponent } from './features/administracion/usuarios/usuarios';
+import { AgregarCitaComponent } from './features/citas/agregar-cita/agregar-cita';
 
 export const routes: Routes = [
   { 
@@ -57,7 +58,13 @@ export const routes: Routes = [
     component: AgregarHospitalComponent,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ROLE_ADMIN'] }
-  },  
+  },
+  {
+    path: 'citas/agregar',
+    component: AgregarCitaComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_USER'] }
+  },
   {
     path: 'administracion/usuarios',
     component: UsuariosComponent, 
