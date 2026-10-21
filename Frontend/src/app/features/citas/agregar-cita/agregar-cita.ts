@@ -11,7 +11,7 @@ import { environment } from '../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './agregar-cita.html',
-  styleUrl: './cita.css'
+  styleUrl: './agregar-cita.css'
 })
 export class AgregarCitaComponent implements OnInit {
   private citaService = inject(CitaService);
