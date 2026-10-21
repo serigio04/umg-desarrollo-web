@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CitaService, CitaDto } from '../services/cita';
@@ -12,6 +12,7 @@ import { CitaService, CitaDto } from '../services/cita';
 })
 export class CitasComponent implements OnInit {
   private citaService = inject(CitaService);
+  private cdr = inject(ChangeDetectorRef); 
 
   citas: CitaDto[] = [];
   cargando = false;
@@ -26,10 +27,12 @@ export class CitasComponent implements OnInit {
       next: (data) => {
         this.citas = data;
         this.cargando = false;
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
         console.error('Error al obtener citas:', err);
         this.cargando = false;
+        this.cdr.detectChanges(); 
       }
     });
   }

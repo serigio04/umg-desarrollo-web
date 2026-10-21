@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -11,13 +11,14 @@ import { environment } from '../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './agregar-cita.html',
-  styleUrl: './agregar-cita.css'
+  styleUrls: ['./agregar-cita.css']
 })
 export class AgregarCitaComponent implements OnInit {
   private citaService = inject(CitaService);
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   pacientes: any[] = [];
   doctores: any[] = [];
@@ -39,9 +40,22 @@ export class AgregarCitaComponent implements OnInit {
 
   cargarListasCatalogos(): void {
     const url = environment.API_BACKEND_URL;
-    this.http.get<any[]>(`${url}/api/pacientes`).subscribe(data => this.pacientes = data);
-    this.http.get<any[]>(`${url}/api/doctores`).subscribe(data => this.doctores = data);
-    this.http.get<any[]>(`${url}/api/hospitales`).subscribe(data => this.hospitales = data);
+    
+    this.http.get<any>(`${url}/api/pacientes`).subscribe(res => {
+      // Si tu backend lo envía paginado usa res.data, sino usa res directo
+      this.pacientes = res.data || res; 
+      this.cdr.detectChanges();
+    });
+    
+    this.http.get<any>(`${url}/api/doctores`).subscribe(res => {
+      this.doctores = res.data || res;
+      this.cdr.detectChanges();
+    });
+    
+    this.http.get<any>(`${url}/api/hospitales`).subscribe(res => {
+      this.hospitales = res.data || res;
+      this.cdr.detectChanges();
+    });
   }
 
   guardarCita(): void {
@@ -54,12 +68,12 @@ export class AgregarCitaComponent implements OnInit {
 
     this.citaService.crearCita(nuevaCita).subscribe({
       next: () => {
-        // Si tiene éxito, regresamos a la lista de citas
         this.router.navigate(['/citas']);
       },
       error: (err) => {
         console.error('Error al agendar cita:', err);
         this.errorMensaje = 'No se pudo guardar la cita. Verifique los datos enviados.';
+        this.cdr.detectChanges();
       }
     });
   }
