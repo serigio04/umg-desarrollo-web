@@ -1,134 +1,68 @@
-# Backend API - Gestión de Pacientes
+# Backend: API de gestión clínica
 
-API RESTful desarrollada en Java y Spring Boot que provee los servicios necesarios para la gestión y persistencia de la información de los pacientes. 
+API REST desarrollada con Java 17 y Spring Boot 3.2.4. Gestiona pacientes, hospitales, doctores, citas y el menú disponible para los roles autenticados.
 
-## Stack Tecnológico
+## Tecnologías
 
-- Java 17+
-- Spring Boot 3.x (Web, Data JPA, Security)
-- Lombok (Reducción de código repetitivo)
-- PostgreSQL / MySQL (Base de datos relacional)
-- Maven (Gestor de dependencias)
-- Docker (Contenerización)
+- Spring Web, Spring Security y Spring Data JPA.
+- PostgreSQL para los datos relacionales y MongoDB para datos NoSQL.
+- JWT para validar las peticiones autenticadas; el backend utiliza la llave pública RSA compartida con [Auth](../Auth/README.md).
+- Maven y Lombok.
 
-## Diagrama de Componentes
+## Endpoints
 
-Muestra cómo están estructurados los paquetes lógicos dentro del backend.
+La URL base local es `http://localhost:8080`. Los endpoints protegidos requieren un JWT en la cabecera `Authorization: Bearer <token>`.
 
-```mermaid
-graph TD
-    subgraph "Capa de Presentación"
-        C[PacienteController]
-    end
-    subgraph "Capa de Seguridad"
-        SF[JwtAuthenticationFilter]
-    end
-    subgraph "Capa de Negocio"
-        SI[PacienteServiceImpl]
-    end
-    subgraph "Capa de Acceso a Datos"
-        R[PacienteRepository]
-        S[PacienteSpecification]
-    end
-    subgraph "Base de Datos"
-        DB[(DB)]
-    end
+| Método | Ruta | Acceso |
+| --- | --- | --- |
+| `GET` | `/api/pacientes` | `ROLE_ADMIN` o `ROLE_OPERADOR` |
+| `POST` | `/api/pacientes` | `ROLE_ADMIN` |
+| `GET` | `/api/hospitales` | `ROLE_ADMIN` o `ROLE_OPERADOR` |
+| `POST` | `/api/hospitales` | `ROLE_ADMIN` |
+| `GET` | `/api/doctores` | `ROLE_ADMIN` o `ROLE_OPERADOR` |
+| `POST` | `/api/doctores` | `ROLE_ADMIN` |
+| `GET` | `/api/citas` | `ROLE_ADMIN` o `ROLE_OPERADOR` |
+| `POST` | `/api/citas` | `ROLE_ADMIN` |
+| `GET` | `/api/accesos/menu` | Usuario autenticado |
 
-    SF -->|Filtra peticiones| C
-    C -->|Mapea DTOs e invoca| SI
-    SI -->|Combina Specification y Pageable| R
-    R -->|Usa| S
-    R -->|JPA/Hibernate| DB
+El listado de pacientes acepta filtros y paginación mediante parámetros de consulta definidos por `PacienteFilter`. Devuelve un objeto con los datos y metadatos de paginación.
+
+## Requisitos y ejecución local
+
+Se requiere Java 17 y Maven. Configura primero una base PostgreSQL con el esquema de la aplicación. Para iniciar el servicio desde esta carpeta:
+
+```bash
+mvn spring-boot:run
 ```
 
-## Diagrama de Clases (Dominio principal)
+Para compilar y ejecutar las pruebas:
 
-Estructura de las entidades, DTOs y Servicios principales relacionados con el Paciente.
-
-```mermaid
-classDiagram
-    class Paciente {
-        -Long id
-        -String nombre
-        -String apellidos
-        -String email
-        -LocalDate fechaNacimiento
-        -Boolean estado
-    }
-    
-    class PacienteDto {
-        -Long id
-        -String nombre
-        -String apellidos
-        -String email
-        -LocalDate fechaNacimiento
-    }
-
-    class PacienteFilter {
-        -String nombre
-        -String apellidos
-        -Boolean estado
-        -Integer page
-        -Integer size
-    }
-
-    class PacienteService {
-        <<interface>>
-        +obtenerPacientesPaginados(PacienteFilter filter) PageResponse
-        +crearPaciente(PacienteDto dto) Paciente
-    }
-
-    class PacienteServiceImpl {
-        -PacienteRepository repository
-    }
-
-    PacienteServiceImpl ..|> PacienteService
-    PacienteServiceImpl --> Paciente
-    PacienteServiceImpl --> PacienteDto
-    PacienteServiceImpl --> PacienteFilter
+```bash
+mvn test
+mvn package
 ```
 
-## Diagrama de Secuencia: Listado con Filtros y Paginación
+## Configuración
 
-Muestra el flujo de ejecución cuando el cliente solicita la tabla de pacientes.
+`src/main/resources/application.properties` define los valores predeterminados y admite configuración por variables de entorno:
 
-```mermaid
-sequenceDiagram
-    actor Cliente as Frontend (Angular)
-    participant C as PacienteController
-    participant S as PacienteServiceImpl
-    participant Spec as PacienteSpecification
-    participant R as PacienteRepository
-    participant DB as Base de Datos
+| Variable | Uso |
+| --- | --- |
+| `PORT` | Puerto HTTP; por defecto `8080` |
+| `DB_HOST`, `DB_PORT`, `DB_NAME` | Ubicación de PostgreSQL |
+| `DB_USER`, `DB_PASSWORD` | Credenciales de PostgreSQL |
+| `SPRING_DATA_MONGODB_URI` | URI de conexión a MongoDB |
 
-    Cliente->>C: GET /api/pacientes?nombre=Juan&page=0&size=50
-    C->>S: obtenerPacientesPaginados(PacienteFilter)
-    S->>S: Crear PageRequest (Pageable)
-    S->>Spec: conFiltros(PacienteFilter)
-    Spec-->>S: Retorna Specification<Paciente>
-    S->>R: findAll(Specification, Pageable)
-    R->>DB: Ejecuta SQL Dinámico (LIKE %Juan% LIMIT 50 OFFSET 0)
-    DB-->>R: Retorna ResultSet
-    R-->>S: Retorna Page<Paciente>
-    S->>S: Construye PaginacionMetadata
-    S-->>C: Retorna PageResponse<Paciente>
-    C-->>Cliente: 200 OK (JSON)
+Hibernate está configurado con `ddl-auto=none`: el servicio no crea ni actualiza automáticamente el esquema relacional. La base de datos y sus tablas deben prepararse antes de iniciar la aplicación. En Docker Compose, la conexión relacional se configura desde `Docker/docker-compose.yml`. La configuración actual de CORS permite cualquier origen.
+
+## Docker
+
+La imagen multietapa usada por Compose se define en `Docker/backend.dockerfile`. Desde la raíz del repositorio:
+
+```bash
+docker compose -f Docker/docker-compose.yml build backend
+docker compose -f Docker/docker-compose.yml up -d backend
+docker compose -f Docker/docker-compose.yml logs -f backend
 ```
 
-## Cómo ejecutar el proyecto (Docker)
-
-El proyecto incluye un Dockerfile multietapa y configuración para levantar todo el entorno mediante Maven y Docker.
-
-1. Asegúrate de estar en el directorio /backend.
-2. Compilar y empaquetar el proyecto (evitando tests para despliegue rápido):
-   ```bash
-   mvn clean package -DskipTests
-   ```
-3. Construir la imagen de Docker:
-   ```bash
-   docker build backend --no-cache.
-   ```
-4. Levantar el contenedor (o usar docker-compose si está disponible):
-   ```bash
-   docker up backend -d
-   ```
+También existe `Backend/Dockerfile`; la orquestación del proyecto usa el Dockerfile ubicado en `Docker/`.

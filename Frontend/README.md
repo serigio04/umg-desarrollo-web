@@ -1,38 +1,47 @@
-# Frontend - Gestión de Pacientes
+# Frontend: aplicación web
 
-Esta es la aplicación cliente del Sistema de Gestión de Pacientes. Está desarrollada utilizando Angular, aprovechando funcionalidades modernas como Standalone Components, Server-Side Rendering (SSR) y reactividad.
+Interfaz del sistema de gestión clínica, construida con Angular 22 y TypeScript. Permite iniciar sesión y administrar pacientes, hospitales, doctores y citas según las rutas y roles definidos en la aplicación.
 
-## Tecnologías Principales
+## Requisitos
 
-- Angular (Versión 17+)
-- RxJS (Manejo de flujos asíncronos)
-- Tailwind CSS / Bootstrap (Estilos y responsividad)
-- TypeScript
+- Node.js compatible con Angular 22; la imagen Docker usa Node.js 24.
+- npm (la versión declarada en `package.json` es npm 11).
 
-## Requisitos Previos
+No es necesario instalar Angular CLI globalmente: los comandos de npm utilizan la CLI local del proyecto.
 
-- Node.js (v18 o superior)
-- Angular CLI instalado globalmente (npm install -g @angular/cli)
+## Desarrollo
 
-## Configuración y Ejecución local
+Desde esta carpeta:
 
-1. Instalar las dependencias del proyecto:
-   ```bash
-   npm install
-   ```
-2. Iniciar el servidor de desarrollo:
-   ```bash
-   npm start
-   ```
-   (o alternativamente: ng serve)
-3. Navegar a http://localhost:4200/. La aplicación se recargará automáticamente si cambias cualquiera de los archivos fuente.
+```bash
+npm install
+npm start
+```
 
-## Estructura Principal
+Abre `http://localhost:4200`. Para compilar o ejecutar las pruebas:
 
-- src/app/core/services: Servicios HTTP para comunicarse con la API (ej. pacientes.service.ts).
-- src/app/core/interceptors: Interceptores HTTP (como auth.interceptor.ts que inyecta el token JWT de forma segura evaluando el entorno del navegador).
-- src/app/components: Componentes de interfaz (ej. listado-pacientes).
+```bash
+npm run build
+npm test
+```
 
-## Notas sobre SSR (Server-Side Rendering)
+## Funcionalidades y estructura
 
-Este proyecto utiliza SSR. Para evitar errores al interactuar con APIs del navegador (como localStorage o window en los interceptores), asegúrate de condicionar la ejecución del código del lado del cliente utilizando isPlatformBrowser(this.platformId) o evaluando typeof window !== 'undefined'.
+- `src/app/features/`: pantallas de inicio de sesión, pacientes, hospitales, doctores, citas y administración de usuarios.
+- `src/app/core/services/`: comunicación con las API y manejo de autenticación.
+- `src/app/core/guards/`: protección de rutas por autenticación y roles.
+- `src/app/core/interceptors/`: inclusión del JWT en las peticiones HTTP y gestión de respuestas de autenticación.
+- `src/app/layout/`: navegación y elementos compartidos de la interfaz.
+- `src/environments/`: direcciones de las API para desarrollo y compilación de producción.
+
+## Direcciones de las API
+
+Las URL se configuran en `src/environments/environment.ts` y `environment.prod.ts` mediante `API_AUTH_URL` y `API_BACKEND_URL`. En este momento ambos archivos apuntan a los servicios desplegados en Render. Si ejecutas las API localmente o mediante Docker, actualiza estos valores y reinicia el servidor de desarrollo o vuelve a generar la compilación.
+
+Las URL que consume el navegador deben ser accesibles desde el equipo cliente. Los nombres internos de servicios de Docker, como `backend` o `auth`, solo resuelven dentro de la red de contenedores.
+
+## Producción y Docker
+
+`npm run build` genera los archivos de producción en `dist/frontend-app/browser`. La imagen definida en `Docker/frontend.dockerfile` sirve esos archivos con Nginx y publica el puerto 80. Nginx redirige las rutas de la aplicación a `index.html`.
+
+Aunque el repositorio contiene archivos de servidor Angular, la configuración actual de `angular.json` deshabilita SSR (`ssr: false`); la aplicación se compila y sirve como SPA estática.
