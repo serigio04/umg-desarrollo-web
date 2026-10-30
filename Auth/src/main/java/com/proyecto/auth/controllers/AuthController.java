@@ -5,25 +5,76 @@ import com.proyecto.auth.entities.Usuario;
 import com.proyecto.auth.repositories.RolRepository;
 import com.proyecto.auth.repositories.UsuarioRepository;
 import com.proyecto.auth.utils.JwtTokenProvider;
+
+// Imports para Bucket4j y HTTP
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // Permite llamadas desde cualquier origen (Postman, Render, Angular)
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
+
+    // Caché en memoria para almacenar los buckets por IP
+    private final Map<String, Bucket> rateLimitCache = new ConcurrentHashMap<>();
+
+    // Regla: 10 peticiones por minuto
+    private Bucket resolverBucket(String ip) {
+        return rateLimitCache.computeIfAbsent(ip, k -> Bucket.builder()
+                .addLimit(Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1))))
+                .build());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) throws Exception {
+        
+        // 1. Validar Rate Limiting por IP
+        String clientIp = httpRequest.getRemoteAddr();
+        Bucket bucket = resolverBucket(clientIp);
+
+        if (!bucket.tryConsume(1)) {
+            // Devuelve HTTP 429 Too Many Requests cuando se superan las 10 peticiones
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body("HTTP 429: Demasiadas solicitudes. Intente en un minuto.");
+        }
+
+        // Lógica habitual de login
+        Optional<Usuario> userOpt = usuarioRepository.findByUsername(request.getUsername());
+
+        if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
+            return ResponseEntity.status(401).body("Credenciales inválidas.");
+        }
+
+        Usuario usuario = userOpt.get();
+        List<String> roles = usuario.getRoles().stream()
+                .map(Rol::getNombre)
+                .collect(Collectors.toList());
+
+        String token = tokenProvider.generarToken(usuario.getUsername(), roles);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registrar(@RequestBody RegistroRequest request) {
@@ -56,26 +107,6 @@ public class AuthController {
         usuarioRepository.save(usuario);
 
         return ResponseEntity.ok("Usuario registrado exitosamente con el rol: " + rolFinal);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) throws Exception {
-        Optional<Usuario> userOpt = usuarioRepository.findByUsername(request.getUsername());
-
-        if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
-            return ResponseEntity.status(401).body("Credenciales inválidas.");
-        }
-
-        Usuario usuario = userOpt.get();
-        List<String> roles = usuario.getRoles().stream()
-                .map(Rol::getNombre)
-                .collect(Collectors.toList());
-
-        String token = tokenProvider.generarToken(usuario.getUsername(), roles);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        return ResponseEntity.ok(response);
     }
 }
 
