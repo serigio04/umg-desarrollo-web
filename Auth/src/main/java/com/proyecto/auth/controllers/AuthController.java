@@ -47,24 +47,47 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) throws Exception {
         
-        // 1. Validar Rate Limiting por IP
+        // 1. Rate Limiting por IP
         String clientIp = httpRequest.getRemoteAddr();
         Bucket bucket = resolverBucket(clientIp);
-
         if (!bucket.tryConsume(1)) {
-            // Devuelve HTTP 429 Too Many Requests cuando se superan las 10 peticiones
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body("HTTP 429: Demasiadas solicitudes. Intente en un minuto.");
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("HTTP 429: Demasiadas solicitudes.");
         }
 
-        // Lógica habitual de login
+        // Buscar al usuario
         Optional<Usuario> userOpt = usuarioRepository.findByUsername(request.getUsername());
-
-        if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
-            return ResponseEntity.status(401).body("Credenciales inválidas.");
+        
+        // Si no existe, devolvemos error genérico
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas.");
         }
 
         Usuario usuario = userOpt.get();
+
+        // 3. Verificar Bloqueo Temporal
+        if (usuario.getCuentaBloqueadaHasta() != null && usuario.getCuentaBloqueadaHasta().isAfter(LocalDateTime.now())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas."); 
+        }
+
+        // 2. Verificar Contraseña (Intentos Fallidos)
+        if (!passwordEncoder.matches(request.getPassword(), usuario.getPassword())) {
+            usuario.setIntentosFallidos(usuario.getIntentosFallidos() + 1);
+            
+            if (usuario.getIntentosFallidos() >= 5) {
+                // Bloquear por 15 minutos
+                usuario.setCuentaBloqueadaHasta(LocalDateTime.now().plusMinutes(15));
+            }
+            usuarioRepository.save(usuario); // Guardar el fallo en BD
+            
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas.");
+        }
+
+        // Si la contraseña es correcta: Resetear contadores
+        usuario.setIntentosFallidos(0);
+        usuario.setCuentaBloqueadaHasta(null);
+        usuarioRepository.save(usuario);
+
+        // Generar Token (Tu código original)
         List<String> roles = usuario.getRoles().stream()
                 .map(Rol::getNombre)
                 .collect(Collectors.toList());
@@ -75,7 +98,6 @@ public class AuthController {
         response.put("token", token);
         return ResponseEntity.ok(response);
     }
-
     @PostMapping("/register")
     public ResponseEntity<?> registrar(@RequestBody RegistroRequest request) {
         if (usuarioRepository.existsByUsername(request.getUsername())) {

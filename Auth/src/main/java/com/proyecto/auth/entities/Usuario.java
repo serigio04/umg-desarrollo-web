@@ -2,6 +2,8 @@ package com.proyecto.auth.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,4 +31,8 @@ public class Usuario {
         inverseJoinColumns = @JoinColumn(name = "rol_id")
     )
     private Set<Rol> roles = new HashSet<>();
+
+    // implementación de campos para el bloqueo de cuenta por limites de intentos fallidos
+    private int intentosFallidos = 0;
+    private LocalDateTime cuentaBloqueadaHasta;
 }
